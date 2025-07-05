@@ -1,3 +1,5 @@
+import { Types } from "mongoose"
+
 export interface INotes {
     title: String,
     content: String,
@@ -6,5 +8,6 @@ export interface INotes {
     tags: {
         label: String,
         color:String
-    }
+    },
+    user:Types.ObjectId,
 }

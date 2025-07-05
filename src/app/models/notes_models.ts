@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import { ref } from "process";
 
 const noteSchema = new Schema(
     {
@@ -16,7 +17,12 @@ const noteSchema = new Schema(
     tags: {
         label: { type: String, require: true },
         color:{type: String, default:"gray"}
-    }
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            require:true,
+        }
     }, {
         versionKey: false,
         timestamps:true
