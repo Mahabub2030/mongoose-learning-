@@ -46,15 +46,13 @@ usersRoutes.post("/create-user", async (req: Request, res: Response) => {
     // user.password = password
     // await user.save()
 
-    const password = await User.hasPassword(body.password)
-    console.log(password, "stacick")
+    // const password = await User.hasPassword(body.password)
+    // console.log(password, "statick")
     
-    body.password = password
+    // body.password = password
 
 
     const user = await User.create(body)
-
-    
     res.status(201).json({
       success: true,
       message: ":user create successfully",
@@ -101,13 +99,14 @@ usersRoutes.patch("/:userId", async (req: Request, res: Response) => {
 usersRoutes.delete("/:userId", async (req: Request, res: Response) => {
   const userId = req.params.userId;
 
-  const user = await User.findByIdAndDelete(userId);
+  // const user = await User.findByIdAndDelete(userId);
   // const :user = await :user.findOnedelete({_id : :userId, {new :true}})
-  // const :user = await :user.deleteOne({_id: :userId});
+  // const :user = await :user.findOnedelete({_id : :userId, {new :true}})
+  const user = await User.findOneAndDelete({_id :userId})
 
   res.status(201).json({
     success: true,
-    message: "User delete successfylly",
+    message: "User delete successfully",
 user,
   });
 });

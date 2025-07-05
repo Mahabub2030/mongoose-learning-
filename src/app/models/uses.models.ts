@@ -1,14 +1,23 @@
 import { Model, model, Schema } from "mongoose";
-import { IAddress, IUser, UserInsanceMethods, UserStaicMethod } from "../interfaces/intserface";
+import {
+  IAddress,
+  IUser,
+  UserInsanceMethods,
+  UserStaicMethod,
+} from "../interfaces/intserface";
 import validator from "validator";
 import bcrypt from "bcryptjs";
-const addressShcema = new Schema<IAddress>({
-  city: { type: String },
-  street: { type: String },
-  zip: { type: Number },
-}, {
-    _id:false
-});
+import { Note } from "./notes_models";
+const addressShcema = new Schema<IAddress>(
+  {
+    city: { type: String },
+    street: { type: String },
+    zip: { type: Number },
+  },
+  {
+    _id: false,
+  }
+);
 
 const userSchema = new Schema<IUser, UserStaicMethod, UserInsanceMethods>(
   {
@@ -68,6 +77,8 @@ const userSchema = new Schema<IUser, UserStaicMethod, UserInsanceMethods>(
   {
     versionKey: false,
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject:{virtuals:true}
   }
 );
 
@@ -77,15 +88,45 @@ userSchema.method("hasPassword", async function (planpassword: string) {
   // this.password = password
   return password;
 });
-  
-userSchema.static("hasPassword", async  function (planpassword: string) {
-  const password = await bcrypt.hash(planpassword, 10)
-  console.log(password,"with haspwrod")
-return password
- 
-  
+
+
+userSchema.static("hasPassword", async function (planpassword: string) {
+  const password = await bcrypt.hash(planpassword, 10);
+  console.log(password, "with haspwrod");
+  return password;
 });
 
+userSchema.pre("save", async function (next) {
+  // console.log("inside pre save code")
+  this.password = await bcrypt.hash(this.password, 10); 
+  console.log(this)
+  next()
+})
 
+// Qury middleware
+userSchema.pre("find", function (next) {
+  // console.log(doc)
+  console.log('inside pre fild book')
+  next()
+})
+
+// post Hook
+userSchema.post("findOneAndDelete", async function (doc,next) {
+  if (doc) {
+    console.log(doc);
+    await Note.deleteMany({ user: doc._id });
+  }
+  next()
+})
+
+
+// Docments middlare
+userSchema.post("save", function (doc,next) {
+  console.log('inside post hook', doc._id)
+  next()
+})
+userSchema.virtual("fullName").get(function () {
+  return `${this.fastName} ${this.lastName}`
+})
 
 export const User = model<IUser, UserStaicMethod>("User", userSchema);
