@@ -1,5 +1,5 @@
 import { Model, model, Schema } from "mongoose";
-import { IAddress, IUser, UserInsanceMethods } from "../interfaces/intserface";
+import { IAddress, IUser, UserInsanceMethods, UserStaicMethod } from "../interfaces/intserface";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 const addressShcema = new Schema<IAddress>({
@@ -10,7 +10,7 @@ const addressShcema = new Schema<IAddress>({
     _id:false
 });
 
-const userSchema = new Schema<IUser , Model<IUser>, UserInsanceMethods>(
+const userSchema = new Schema<IUser, UserStaicMethod, UserInsanceMethods>(
   {
     fastName: {
       type: String,
@@ -71,14 +71,21 @@ const userSchema = new Schema<IUser , Model<IUser>, UserInsanceMethods>(
   }
 );
 
-userSchema.method("hasPassword", async  function (planpassword: string) {
+userSchema.method("hasPassword", async function (planpassword: string) {
+  const password = await bcrypt.hash(planpassword, 10);
+  console.log(password);
+  // this.password = password
+  return password;
+});
+  
+userSchema.static("hasPassword", async  function (planpassword: string) {
   const password = await bcrypt.hash(planpassword, 10)
-  console.log(password)
-  this.password =password
+  console.log(password,"with haspwrod")
+return password
  
   
 });
 
 
 
-export const User = model("User", userSchema);
+export const User = model<IUser, UserStaicMethod>("User", userSchema);

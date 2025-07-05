@@ -39,12 +39,20 @@ usersRoutes.post("/create-user", async (req: Request, res: Response) => {
     //   await my:user.save();
     // const users = await User.create(body);
 
-    const user = new User(body)
+    // const user = new User(body)
 
-    const password = await user.hasPassword(body.password)
-    console.log(password)
-    user.password = password
-    await user.save()
+    // const password = await user.hasPassword(body.password)
+    // console.log(password)
+    // user.password = password
+    // await user.save()
+
+    const password = await User.hasPassword(body.password)
+    console.log(password, "stacick")
+    
+    body.password = password
+
+
+    const user = await User.create(body)
 
     
     res.status(201).json({
