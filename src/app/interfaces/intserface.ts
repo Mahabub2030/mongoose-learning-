@@ -1,10 +1,10 @@
-
 interface IUser {
   fastName: string;
   lastName: string;
-    email: string;
-    password: string,
-    role:'user' | 'admin'
+  age: number;
+  email: string;
+  password: string;
+  role: "USER" | "ADMIN" | "SUPERADMIN";
 }
 
 export default IUser;
