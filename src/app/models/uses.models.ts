@@ -1,7 +1,7 @@
-import { model, Schema } from "mongoose";
-import IUser, { IAddress } from "../interfaces/intserface";
+import { Model, model, Schema } from "mongoose";
+import { IAddress, IUser, UserInsanceMethods } from "../interfaces/intserface";
 import validator from "validator";
-
+import bcrypt from "bcryptjs";
 const addressShcema = new Schema<IAddress>({
   city: { type: String },
   street: { type: String },
@@ -10,7 +10,7 @@ const addressShcema = new Schema<IAddress>({
     _id:false
 });
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser , Model<IUser>, UserInsanceMethods>(
   {
     fastName: {
       type: String,
@@ -70,5 +70,15 @@ const userSchema = new Schema<IUser>(
     timestamps: true,
   }
 );
+
+userSchema.method("hasPassword", async  function (planpassword: string) {
+  const password = await bcrypt.hash(planpassword, 10)
+  console.log(password)
+  this.password =password
+ 
+  
+});
+
+
 
 export const User = model("User", userSchema);

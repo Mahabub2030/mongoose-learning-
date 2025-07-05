@@ -1,11 +1,13 @@
 import express, { Request, Response } from "express";
 import { Note } from "../models/notes_models";
 
+
  export const notesRoutes = express.Router();
 
 // create
 notesRoutes.post("/create-note", async (req: Request, res: Response) => {
   const body = req.body;
+  
 
   // approse1
   const myNote = new Note({

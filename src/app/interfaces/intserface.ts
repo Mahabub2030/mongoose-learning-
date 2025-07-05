@@ -15,4 +15,6 @@ export interface IUser {
   address: IAddress;
 }
 
-export default IUser;
+export interface UserInsanceMethods {
+  hasPassword(password: string): string;
+}
