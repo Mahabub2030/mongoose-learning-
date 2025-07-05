@@ -18,9 +18,10 @@ const createUserZodShcema = z.object({
 // create
 usersRoutes.post("/create-user", async (req: Request, res: Response) => {
   try {
-    const body = await createUserZodShcema.parseAsync(req.body);
+    // const zodBody = await createUserZodShcema.parseAsync(req.body);
+    const body = req.body;
     
-    console.log(body, "zode body chiking")
+    // console.log(body, "zode body chiking")
 
     // approse1
     const user = new User({
@@ -32,11 +33,10 @@ usersRoutes.post("/create-user", async (req: Request, res: Response) => {
 
     //   await my:user.save();
     const users = await User.create(body);
-
     res.status(201).json({
       success: true,
       message: ":user create successfully",
-      users:{},
+      user:user,
     });
   
   } catch (error: any) {
